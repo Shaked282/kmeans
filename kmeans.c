@@ -156,7 +156,7 @@ int main(int argc, char **argv)
     int num_of_vectors, num_of_coords;
     double n;
     char c;
-    double kd;
+    double kd, iterd;
     int vec_index, coor_index;
     double** vectors;
 
@@ -174,9 +174,11 @@ int main(int argc, char **argv)
         K = atoi(argv[1]);
         kd = atof(argv[1]);
         iter = atoi(argv[2]);
+        iterd = atof(argv[2]);
+
     }
     printf("K=%i, iter=%i\n", K, iter);
-    if (iter < 1 || iter > 1000) {
+    if (iter!=iterd || iter < 1 || iter > 1000) {
         printf("Invalid maximum iteration!\n");
         exit(EXIT_FAILURE);
         return 1;
@@ -215,10 +217,11 @@ int main(int argc, char **argv)
         curr_coord = curr_coord->next;
         curr_coord->next = NULL;
     }
-    free(curr_coord->next);         /*!!!!!!!*/
-    free(curr_vec->next);
-    free(curr_coord);
+
     free(curr_vec);
+    free(curr_vec->next);
+    free(head_coord);
+    free(head_vec);
 
     if (K < 1 || K > num_of_vectors || K != kd) {
         printf("Invalid number of clusters!\n");
@@ -242,6 +245,9 @@ int main(int argc, char **argv)
     for (vec_index = 0; vec_index < num_of_vectors; vec_index++){  /*!!!!!!!!!!!!*/
         free(vectors[vec_index]);
     }
+
+    free(curr_coord->next);         /*!!!!!!!*/
+    free(curr_coord);
     free(vectors);
     return 0;
 }
