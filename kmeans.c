@@ -135,6 +135,7 @@ void k_means(double** vectors, int num_of_vectors, int k, int num_of_coords, int
         free(clusters[index_k]);
     }
     free(clusters);
+    free(cluster_sizes);
     for (index_k = 0; index_k < k; index_k++) {
             free(centroids[index_k]);
         }
