@@ -153,6 +153,29 @@ struct vector
     struct coord *coords;
 };
 
+void free_coords(struct coord *head)
+{
+    struct coord *tmp;
+    while (head)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+}
+
+void free_vectors(struct vector *head)
+{
+    struct vector *tmp;
+    while (head)
+    {
+        free_coords(head->coords);
+        tmp = head;
+        head = head->next;
+        free(tmp);
+    }
+}
+
 int main(int argc, char **argv)
 {
     int K, iter;
@@ -250,5 +273,8 @@ int main(int argc, char **argv)
         free(vectors[vec_index]);
     }
     free(vectors);
+
+    // free all linked list mallocs
+    free_vectors(head_vec);
     return 0;
 }
