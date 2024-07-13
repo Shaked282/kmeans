@@ -103,7 +103,9 @@ void k_means(double** vectors, int num_of_vectors, int k, int num_of_coords, int
         if (convergence == 0) {
             break;
         }
-        free(cluster_sizes);
+        if (iter_cnt != iter -1 && convergence != 0) {
+            free(cluster_sizes);
+        }
         for (index_k = 0; index_k < k; index_k++){
             for (index_coord = 0; index_coord < num_of_coords; index_coord++){
                 centroids[index_k][index_coord] = new_centroids[index_k][index_coord];
@@ -126,11 +128,13 @@ void k_means(double** vectors, int num_of_vectors, int k, int num_of_coords, int
     }
     for (index_k = 0; index_k < k; index_k++) {
         for (index_size = 0; index_size < cluster_sizes[index_k]; index_size++) {
-            free(clusters[index_k][index_size]);
+            if ( clusters[index_k][index_size] != NULL){
+                free(clusters[index_k][index_size]);
+            }
         }
         free(clusters[index_k]);
     }
-    free(cluster_sizes);
+    free(clusters);
     for (index_k = 0; index_k < k; index_k++) {
             free(centroids[index_k]);
         }
@@ -169,16 +173,16 @@ int main(int argc, char **argv)
         K = atoi(argv[1]);
         kd = atof(argv[1]);
         iter = 200;
+        iterd = 200;
     }
     else if (argc == 3){
         K = atoi(argv[1]);
         kd = atof(argv[1]);
         iter = atoi(argv[2]);
         iterd = atof(argv[2]);
-
     }
     printf("K=%i, iter=%i\n", K, iter);
-    if (iter!=iterd || iter < 1 || iter > 1000) {
+    if (iter < 1 || iter > 1000 || iterd != iter) {
         printf("Invalid maximum iteration!\n");
         exit(EXIT_FAILURE);
         return 1;
@@ -217,11 +221,10 @@ int main(int argc, char **argv)
         curr_coord = curr_coord->next;
         curr_coord->next = NULL;
     }
-
-    free(curr_vec);
+    free(curr_coord->next);         /*!!!!!!!*/
     free(curr_vec->next);
-    free(head_coord);
-    free(head_vec);
+    free(curr_coord);
+    free(curr_vec);
 
     if (K < 1 || K > num_of_vectors || K != kd) {
         printf("Invalid number of clusters!\n");
@@ -245,9 +248,6 @@ int main(int argc, char **argv)
     for (vec_index = 0; vec_index < num_of_vectors; vec_index++){  /*!!!!!!!!!!!!*/
         free(vectors[vec_index]);
     }
-
-    free(curr_coord->next);         /*!!!!!!!*/
-    free(curr_coord);
     free(vectors);
     return 0;
 }
