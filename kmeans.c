@@ -245,10 +245,6 @@ int main(int argc, char **argv)
         curr_coord = curr_coord->next;
         curr_coord->next = NULL;
     }
-    free(curr_coord->next);         /*!!!!!!!*/
-    free(curr_vec->next);
-    free(curr_coord);
-    free(curr_vec);
 
     if (K < 1 || K > num_of_vectors || K != kd) {
         printf("Invalid number of clusters!\n");
