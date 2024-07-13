@@ -215,7 +215,11 @@ int main(int argc, char **argv)
         curr_coord = curr_coord->next;
         curr_coord->next = NULL;
     }
-    printf("!!%f",kd);
+    free(curr_coord->next);         /*!!!!!!!*/
+    free(curr_vec->next);
+    free(curr_coord);
+    free(curr_vec);
+
     if (K < 1 || K > num_of_vectors || K != kd) {
         printf("Invalid number of clusters!\n");
         exit(EXIT_FAILURE);
@@ -233,6 +237,11 @@ int main(int argc, char **argv)
         }
         c_vec = c_vec -> next;
     }
+
     k_means(vectors, num_of_vectors, K, num_of_coords, iter);
+    for (vec_index = 0; vec_index < num_of_vectors; vec_index++){  /*!!!!!!!!!!!!*/
+        free(vectors[vec_index]);
+    }
+    free(vectors);
     return 0;
 }
